@@ -14,7 +14,8 @@ from concurrent.futures import ThreadPoolExecutor
 from model import WhisperBaseEnONNX
 from qai_hub_models.models.whisper_base_en import App as WhisperApp
 
-CONFIG_PATH = 'config.yaml'
+CONFIG_PATH = "./config.yaml"
+
 HEADERS = {}
 with open(CONFIG_PATH, "r", encoding="utf-8") as file:
     cfg = yaml.safe_load(file)
