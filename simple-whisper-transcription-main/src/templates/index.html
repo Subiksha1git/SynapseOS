@@ -3,17 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask Slider and Button</title>
+    <title>Smart Home Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h2>Slider Value: <span id="sliderValue">{{ state.slider_value }}</span></h2>
-
-        <input type="range" id="slider" min="0" max="100" value="{{ state.slider_value }}">
-
+        <h2>Light Intensity: <span id="sliderValue">{{ state.slider_value }}</span>%</h2>
+        <input type="range" id="slider" min="0" max="100" value="{{ state.slider_value }}" oninput="updateLight(this.value)">
+ 
+        <h2>Volume Control</h2>
+        <canvas id="volumeMeter" width="200" height="200"></canvas>
+        <input type="range" id="volume-slider" min="0" max="100" value="{{ state.volume_level }}" oninput="updateVolume(this.value)">
+        <p>Volume Level: <span id="volume-value">{{ state.volume_level }}</span>%</p>
+ 
         <button id="pressButton">Press Me</button>
     </div>
+ 
+    <script>
+        // Light Intensity Update
+        function updateLight(value) {
+            document.getElementById("sliderValue").innerText = value;
+            fetch('/api/slider', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: parseInt(value) })
+            });
+        }
+ 
+        // Volume Control - Speedometer Update
+        function updateVolume(value) {
+            document.getElementById("volume-value").innerText = value;
+            volumeChart.data.datasets[0].data = [parseInt(value), 100 - parseInt(value)];
+            volumeChart.update();
+            fetch('/api/volume', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ value: parseInt(value) })
+            });
+        }
+ 
+        // Speedometer Visualization
+        const ctx = document.getElementById("volumeMeter").getContext("2d");
+        const volumeChart = new Chart(ctx, {
+            type: "doughnut",
+            data: {
+                datasets: [{
+                    data: [50, 50],
+                    backgroundColor: ["#00c853", "#ccc"]
+                }]
+            },
+            options: {
+                circumference: Math.PI,
+                rotation: Math.PI,
+                cutout: "70%",
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
 </body>
 </html>
