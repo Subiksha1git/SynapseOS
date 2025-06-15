@@ -42,10 +42,11 @@ def chat(data):
         return f"Chat request failed due to {e}"
 
 def send_transcript(transcript: str):
-    transcript = 'Turn the lights on'
+    # transcript = 'hey its winter, too cold in here'
     try: 
         custom_prompt = f"""You are an intelligent smart home assistant. 
-        - Perform the user's requests.
+        - Perform the user's requests. like temperature, volume, device activation and control.
+        - response type like room : system : action : degree/digit of action (only when relevant)
         - Respond **only** with the relevant action performed. 
 
         User Request: {transcript}
@@ -119,7 +120,7 @@ def process_transcription(whisper, chunk, silence_threshold, sample_rate):
         if transcript:
             print(f"\n🎤 Detected: {transcript}")
             response = send_transcript(transcript=transcript)
-            print(f"🤖 LLM Response: {response}")
+            # print(f"🤖 LLM Response: {response}")
 
 def process_audio(whisper, audio_queue, stop_event, chunk_samples, silence_threshold, sample_rate):
     buffer = np.empty((0,), dtype=np.float32)
