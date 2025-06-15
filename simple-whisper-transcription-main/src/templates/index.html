@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Slider and Button</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h2>Slider Value: <span id="sliderValue">{{ state.slider_value }}</span></h2>
+
+        <input type="range" id="slider" min="0" max="100" value="{{ state.slider_value }}">
+
+        <button id="pressButton">Press Me</button>
+    </div>
+</body>
+</html>
